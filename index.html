@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/hero-galaxy.jpg" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/venue-overview.jpg" fetchpriority="high">
   <link rel="stylesheet" href="styles.css">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-487QVEW30G"></script>
@@ -53,8 +53,11 @@
       <div id="slides" class="slides">
         <section class="slide slide--intro is-active" data-step="intro" aria-labelledby="introTitle">
           <div class="slide__content intro-content">
-            <h1 id="introTitle">An offer is waiting for you</h1>
-            <button class="primary-button" type="button" data-next>Unlock my offer</button>
+            <p class="intro-kicker">Red Velvet Samarpan</p>
+            <h1 id="introTitle">Celebrate beautifully in Patna</h1>
+            <p class="intro-copy">Red Velvet Samarpan brings elegant spaces and warm hospitality to your most important celebrations. Share a few details and unlock a thoughtful offer created for your occasion.</p>
+            <p class="intro-location"><span aria-hidden="true">⌖</span> Kidwaipuri, Patna</p>
+            <button class="primary-button" type="button" data-next>Unlock your offer</button>
           </div>
         </section>
 
@@ -81,15 +84,15 @@
             <p class="question-help">Choose one to reveal the FREE inclusions waiting for you.</p>
             <div class="event-grid" role="radiogroup" aria-label="Event type">
               <button class="event-card" type="button" data-field="event_type" data-value="Birthday" role="radio" aria-checked="false">
-                <img src="assets/hall-crystal.jpg" alt="Banquet setting for a birthday celebration" loading="lazy">
                 <span>Birthday</span>
               </button>
+              <button class="event-card" type="button" data-field="event_type" data-value="Anniversary" role="radio" aria-checked="false">
+                <span>Anniversary</span>
+              </button>
               <button class="event-card" type="button" data-field="event_type" data-value="Engagement" role="radio" aria-checked="false">
-                <img src="assets/hero-galaxy.jpg" alt="Elegant hall for an engagement celebration" loading="lazy">
                 <span>Engagement</span>
               </button>
               <button class="event-card" type="button" data-field="event_type" data-value="Wedding" role="radio" aria-checked="false">
-                <img src="assets/hall-theatre-red.jpg" alt="Large event hall for a wedding celebration" loading="lazy">
                 <span>Wedding</span>
               </button>
             </div>

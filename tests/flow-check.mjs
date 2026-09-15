@@ -90,7 +90,8 @@ checks.submission = await evaluate(`(() => {
   };
 })()`);
 
-checks.noVisibleHotelName = await evaluate("!document.body.innerText.toLowerCase().includes('red velvet')");
+checks.brandAndLocationVisible = await evaluate("document.body.innerText.includes('Red Velvet Samarpan') && document.body.innerText.includes('Kidwaipuri, Patna')");
+checks.anniversaryOptionPresent = await evaluate(`Boolean(document.querySelector(".event-card[data-value='Anniversary']"))`);
 
 console.log(JSON.stringify(checks, null, 2));
 socket.close();

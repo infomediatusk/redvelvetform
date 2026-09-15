@@ -53,6 +53,12 @@ button {
   background: var(--wine-deep);
 }
 
+.scene.scene--hidden .scene__image,
+.scene.scene--hidden .scene__veil {
+  visibility: hidden;
+  opacity: 0;
+}
+
 .scene__image {
   position: absolute;
   inset: -2%;
@@ -215,6 +221,39 @@ button {
 
 .intro-content {
   position: relative;
+  max-width: 430px;
+}
+
+.intro-kicker {
+  margin: 0 0 12px;
+  color: var(--gold-light);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.intro-copy {
+  max-width: 390px;
+  margin: 18px 0 0;
+  color: rgba(248, 243, 234, 0.86);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.intro-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 14px 0 22px;
+  color: var(--gold-light);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.intro-location span {
+  font-size: 1rem;
 }
 
 .eyebrow {
@@ -440,13 +479,14 @@ h2:focus {
 
 .event-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-top: 22px;
 }
 
 .event-card {
   overflow: hidden;
+  min-height: 68px;
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -463,16 +503,11 @@ h2:focus {
   transform: translateY(-2px);
 }
 
-.event-card img {
-  display: block;
-  width: 100%;
-  height: 92px;
-  object-fit: cover;
-}
-
 .event-card span {
-  display: block;
-  padding: 12px 6px 13px;
+  display: grid;
+  min-height: 68px;
+  place-items: center;
+  padding: 12px 6px;
   font-size: 0.82rem;
 }
 
@@ -775,10 +810,6 @@ h2:focus {
     font-size: clamp(2.3rem, 10.5vw, 3rem);
   }
 
-  .event-card img {
-    height: 76px;
-  }
-
   .event-card span {
     font-size: 0.72rem;
   }
@@ -816,10 +847,6 @@ h2:focus {
 
   .choice-button {
     min-height: 50px;
-  }
-
-  .event-card img {
-    height: 60px;
   }
 
   .actions {

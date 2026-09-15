@@ -8,6 +8,7 @@
   const progressText = document.getElementById("progressText");
   const sceneA = document.getElementById("sceneA");
   const sceneB = document.getElementById("sceneB");
+  const scene = document.querySelector(".scene");
   const offerDialog = document.getElementById("offerDialog");
   const offerImage = document.getElementById("offerImage");
   const offerTitle = document.getElementById("offerTitle");
@@ -39,43 +40,42 @@
       price: "₹22,999 for 20–25 guests",
       items: ["FREE balloon decoration", "FREE birthday cake", "FREE music"]
     },
+    Anniversary: {
+      prefix: "AN",
+      image: "assets/private-dining.jpg",
+      price: "INR 22,999 for 20-25 guests",
+      items: ["FREE balloon decoration", "FREE birthday cake", "FREE music"]
+    },
     Engagement: {
       prefix: "EN",
-      image: "assets/hero-galaxy.jpg",
+      image: "assets/venue-overview.jpg",
       price: "₹1,49,999 onwards · 25–100 guests",
       items: ["FREE flower decoration", "FREE chef-crafted menu", "FREE couple master room"]
     },
     Wedding: {
       prefix: "WD",
-      image: "assets/hall-theatre-red.jpg",
+      image: "assets/hall-stage.jpg",
       price: "₹3,49,999 onwards · 100–550 guests",
       items: ["2 FREE couple master rooms", "FREE chef-crafted menu", "FREE DJ console", "FREE theme decoration"]
     }
   };
 
   const guestData = {
+    Anniversary: ["20-25 guests", "26-50 guests", "51-100 guests", "More than 100"],
     Birthday: ["20–25 guests", "26–50 guests", "51–100 guests", "More than 100"],
     Engagement: ["25–50 guests", "51–75 guests", "76–100 guests", "More than 100"],
     Wedding: ["100–200 guests", "201–350 guests", "351–550 guests", "More than 550"]
   };
 
   const budgetData = {
+    Anniversary: ["INR 22,999-INR 40,000", "INR 40,001-INR 75,000", "Above INR 75,000", "Need guidance"],
     Birthday: ["₹22,999–₹40,000", "₹40,001–₹75,000", "Above ₹75,000", "Need guidance"],
     Engagement: ["Up to ₹1.5 lakh", "₹1.5–₹2 lakh", "Above ₹2 lakh", "Need guidance"],
     Wedding: ["Up to ₹3.5 lakh", "₹3.5–₹5 lakh", "Above ₹5 lakh", "Need guidance"]
   };
 
   const slideImages = {
-    intro: ["assets/venue-overview.jpg", "assets/suite-premium.jpg"],
-    date: ["assets/decor-gold-wall.jpg"],
-    event: ["assets/hall-crystal.jpg"],
-    guests: ["assets/hall-wide.jpg"],
-    budget: ["assets/buffet-service.jpg"],
-    readiness: ["assets/corridor.jpg"],
-    visit: ["assets/reception-welcome.jpg"],
-    name: ["assets/guest-consultation.jpg"],
-    phone: ["assets/decor-gold-wall.jpg"],
-    success: ["assets/suite-premium.jpg"]
+    intro: ["assets/venue-overview.jpg", "assets/suite-premium.jpg"]
   };
 
   const tracking = collectTracking();
@@ -165,7 +165,7 @@
     whatsappButton.addEventListener("click", openWhatsApp);
 
     goTo(0);
-    preloadImages(Object.values(slideImages).flat().slice(0, 8));
+    preloadImages(slideImages.intro);
   }
 
   function selectEvent(button) {
@@ -443,7 +443,12 @@
   function startScene(step) {
     window.clearInterval(carouselTimer);
     carouselIndex = 0;
-    const images = slideImages[step] || slideImages.intro;
+    if (step !== "intro") {
+      scene.classList.add("scene--hidden");
+      return;
+    }
+    scene.classList.remove("scene--hidden");
+    const images = slideImages.intro;
     setScene(images[0]);
     if (step === "intro" && images.length > 1) {
       carouselTimer = window.setInterval(() => {
