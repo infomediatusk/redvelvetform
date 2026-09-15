@@ -15,6 +15,7 @@
   const offerPrice = document.getElementById("offerPrice");
   const offerItems = document.getElementById("offerItems");
   const offerContinue = document.getElementById("offerContinue");
+  const scratchCard = document.getElementById("scratchCard");
   const guestChoices = document.getElementById("guestChoices");
   const budgetChoices = document.getElementById("budgetChoices");
   const toast = document.getElementById("toast");
@@ -48,13 +49,13 @@
     },
     Engagement: {
       prefix: "EN",
-      image: "assets/venue-overview.jpg",
+      image: "assets/hall-lounge-seating.jpg",
       price: "₹1,49,999 onwards · 25–100 guests",
       items: ["FREE flower decoration", "FREE chef-crafted menu", "FREE couple master room"]
     },
     Wedding: {
       prefix: "WD",
-      image: "assets/hall-stage.jpg",
+      image: "assets/venue-overview.jpg",
       price: "₹3,49,999 onwards · 100–550 guests",
       items: ["2 FREE couple master rooms", "FREE chef-crafted menu", "FREE DJ console", "FREE theme decoration"]
     }
@@ -148,6 +149,8 @@
       goTo(currentIndex + 1);
     });
 
+    scratchCard.addEventListener("click", () => scratchCard.classList.add("is-revealed"));
+
     document.querySelector("[data-name-next]").addEventListener("click", validateNameAndContinue);
     document.getElementById("fullName").addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -179,12 +182,19 @@
     document.getElementById("eventError").textContent = "";
     const offer = offerData[answers.event_type];
     offerImage.src = offer.image;
+    offerImage.alt = `${answers.event_type} celebration setting`;
     offerTitle.textContent = `Your ${answers.event_type} FREE offer is unlocked`;
     offerPrice.textContent = offer.price;
     offerPrice.hidden = !offer.price;
     offerItems.replaceChildren(...offer.items.map((item) => {
       const li = document.createElement("li");
-      li.textContent = item;
+      const badge = document.createElement("span");
+      badge.className = "offer-free-badge";
+      badge.textContent = "FREE";
+      const copy = document.createElement("span");
+      copy.className = "offer-item-copy";
+      copy.textContent = item.replace(/^(\d+\s+)?FREE\s+/i, (_, quantity = "") => quantity ? `${quantity} ` : "");
+      li.append(badge, copy);
       return li;
     }));
     track("event_selected", { event_type: answers.event_type }, "EventSelected");
@@ -280,7 +290,9 @@
 
     document.getElementById("offerCode").textContent = offerCode;
     const offer = offerData[answers.event_type];
-    document.getElementById("offerSummary").textContent = offer.items.join(" • ");
+    scratchCard.classList.remove("is-revealed");
+    document.getElementById("offerSummary").textContent = `${answers.event_type} offer · ${offer.price}`;
+    window.setTimeout(() => scratchCard.classList.add("is-revealed"), 1100);
 
     track("generate_lead", {
       currency: "INR",

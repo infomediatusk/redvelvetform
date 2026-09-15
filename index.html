@@ -56,8 +56,9 @@
             <p class="intro-kicker">Red Velvet Samarpan</p>
             <h1 id="introTitle">Celebrate beautifully in Patna</h1>
             <p class="intro-copy">Red Velvet Samarpan brings elegant spaces and warm hospitality to your most important celebrations. Share a few details and unlock a thoughtful offer created for your occasion.</p>
-            <p class="intro-location"><span aria-hidden="true">⌖</span> Kidwaipuri, Patna</p>
+            <p class="intro-location"><span aria-hidden="true">•</span> Kidwaipuri, Patna</p>
             <button class="primary-button" type="button" data-next>Unlock your offer</button>
+            <p class="intro-note">No payment required <span aria-hidden="true">·</span> Takes less than a minute</p>
           </div>
         </section>
 
@@ -84,15 +85,19 @@
             <p class="question-help">Choose one to reveal the FREE inclusions waiting for you.</p>
             <div class="event-grid" role="radiogroup" aria-label="Event type">
               <button class="event-card" type="button" data-field="event_type" data-value="Birthday" role="radio" aria-checked="false">
+                <img src="assets/hall-crystal.jpg" alt="Birthday banquet setting" loading="lazy">
                 <span>Birthday</span>
               </button>
               <button class="event-card" type="button" data-field="event_type" data-value="Anniversary" role="radio" aria-checked="false">
+                <img src="assets/private-dining.jpg" alt="Anniversary dining setting" loading="lazy">
                 <span>Anniversary</span>
               </button>
               <button class="event-card" type="button" data-field="event_type" data-value="Engagement" role="radio" aria-checked="false">
+                <img src="assets/hall-lounge-seating.jpg" alt="Elegant engagement lounge" loading="lazy">
                 <span>Engagement</span>
               </button>
               <button class="event-card" type="button" data-field="event_type" data-value="Wedding" role="radio" aria-checked="false">
+                <img src="assets/venue-overview.jpg" alt="Wedding banquet hall" loading="lazy">
                 <span>Wedding</span>
               </button>
             </div>
@@ -197,12 +202,16 @@
         <section class="slide slide--success" data-step="success" aria-labelledby="successTitle">
           <div class="slide__content success-content">
             <span class="success-mark" aria-hidden="true">✓</span>
-            <p class="eyebrow">One final step</p>
-            <h2 id="successTitle">Send the WhatsApp message to activate your offer</h2>
-            <p>Your code becomes valid only after you send the pre-filled message on WhatsApp.</p>
+            <p class="eyebrow">Your offer is ready</p>
+            <h2 id="successTitle">Your private code is ready</h2>
+            <p class="success-lead">Send your details on WhatsApp to activate your offer.</p>
             <div class="code-card">
-              <span>Your offer code</span>
-              <strong id="offerCode">—</strong>
+              <span class="code-card__label">Tap to reveal your offer code</span>
+              <button id="scratchCard" class="scratch-card" type="button" aria-label="Reveal your offer code">
+                <strong id="offerCode">—</strong>
+                <span class="scratch-card__foil" aria-hidden="true"></span>
+                <span class="scratch-card__hint">Scratch to reveal</span>
+              </button>
             </div>
             <div id="offerSummary" class="offer-summary"></div>
             <button id="whatsappButton" class="whatsapp-button" type="button">
@@ -225,6 +234,7 @@
       <p class="eyebrow">Selected especially for you</p>
       <h2 id="offerTitle">Your FREE offer is unlocked</h2>
       <p id="offerPrice" class="offer-price"></p>
+      <p class="offer-inclusions-label">Your FREE inclusions</p>
       <ul id="offerItems" class="offer-list"></ul>
       <p class="offer-activation-note">Complete the form to receive your code. The code becomes valid only after you send the WhatsApp message.</p>
       <button id="offerContinue" class="primary-button" type="button">Continue with this offer</button>
