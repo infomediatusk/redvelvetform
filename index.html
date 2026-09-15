@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1b090d">
+  <meta name="description" content="Unlock a celebration offer tailored to your event.">
+  <link rel="canonical" href="https://redvelvetform.mediatusk.com/">
+  <title>Unlock Your Celebration Offer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/hero-galaxy.jpg" fetchpriority="high">
+  <link rel="stylesheet" href="styles.css">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-487QVEW30G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-487QVEW30G', { send_page_view: true });
+  </script>
+
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+    (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '925632936518912');
+    fbq('track', 'PageView');
+  </script>
+</head>
+<body>
+  <noscript>
+    <img height="1" width="1" class="pixel-fallback" alt="" src="https://www.facebook.com/tr?id=925632936518912&ev=PageView&noscript=1">
+  </noscript>
+
+  <div class="scene" aria-hidden="true">
+    <img id="sceneA" class="scene__image is-visible" src="assets/venue-overview.jpg" alt="">
+    <img id="sceneB" class="scene__image" src="assets/suite-premium.jpg" alt="">
+    <div class="scene__veil"></div>
+  </div>
+
+  <main class="experience">
+    <form id="leadForm" class="form-card" novalidate>
+      <div class="progress-wrap" aria-label="Form progress">
+        <div class="progress-track"><span id="progressBar"></span></div>
+        <span id="progressText" class="progress-text">Your offer awaits</span>
+      </div>
+
+      <div id="slides" class="slides">
+        <section class="slide slide--intro is-active" data-step="intro" aria-labelledby="introTitle">
+          <div class="slide__content intro-content">
+            <h1 id="introTitle">An offer is waiting for you</h1>
+            <button class="primary-button" type="button" data-next>Unlock my offer</button>
+          </div>
+        </section>
+
+        <section class="slide" data-step="date" aria-labelledby="dateTitle">
+          <div class="slide__content">
+            <p class="eyebrow">Your celebration</p>
+            <h2 id="dateTitle">When is your event?</h2>
+            <p class="question-help">A date helps us check availability for you.</p>
+            <label class="field-label" for="eventDate">Select a date</label>
+            <input id="eventDate" name="event_date" class="text-input date-input" type="date" autocomplete="off">
+            <button class="choice-button choice-button--single" type="button" data-date-flexible>Date not fixed yet</button>
+            <p id="dateError" class="error-message" role="alert"></p>
+            <div class="actions">
+              <button class="back-button" type="button" data-back aria-label="Go back">Back</button>
+              <button class="primary-button" type="button" data-date-next>Continue</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-step="event" aria-labelledby="eventTitle">
+          <div class="slide__content">
+            <p class="eyebrow">Unlock your offer</p>
+            <h2 id="eventTitle">What are you celebrating?</h2>
+            <p class="question-help">Choose one to reveal the FREE inclusions waiting for you.</p>
+            <div class="event-grid" role="radiogroup" aria-label="Event type">
+              <button class="event-card" type="button" data-field="event_type" data-value="Birthday" role="radio" aria-checked="false">
+                <img src="assets/hall-crystal.jpg" alt="Banquet setting for a birthday celebration" loading="lazy">
+                <span>Birthday</span>
+              </button>
+              <button class="event-card" type="button" data-field="event_type" data-value="Engagement" role="radio" aria-checked="false">
+                <img src="assets/hero-galaxy.jpg" alt="Elegant hall for an engagement celebration" loading="lazy">
+                <span>Engagement</span>
+              </button>
+              <button class="event-card" type="button" data-field="event_type" data-value="Wedding" role="radio" aria-checked="false">
+                <img src="assets/hall-theatre-red.jpg" alt="Large event hall for a wedding celebration" loading="lazy">
+                <span>Wedding</span>
+              </button>
+            </div>
+            <p id="eventError" class="error-message" role="alert"></p>
+            <div class="actions actions--back-only">
+              <button class="back-button" type="button" data-back>Back</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-step="guests" aria-labelledby="guestsTitle">
+          <div class="slide__content">
+            <p class="eyebrow">Guest experience</p>
+            <h2 id="guestsTitle">How many guests are you expecting?</h2>
+            <div id="guestChoices" class="choice-grid" role="radiogroup" aria-label="Expected guests"></div>
+            <div class="actions actions--back-only">
+              <button class="back-button" type="button" data-back>Back</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-step="budget" aria-labelledby="budgetTitle">
+          <div class="slide__content">
+            <p class="eyebrow">Tailored for you</p>
+            <h2 id="budgetTitle">What is your estimated celebration budget?</h2>
+            <p class="question-help">This helps us recommend the most suitable experience.</p>
+            <div id="budgetChoices" class="choice-grid" role="radiogroup" aria-label="Estimated budget"></div>
+            <div class="actions actions--back-only">
+              <button class="back-button" type="button" data-back>Back</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-step="readiness" aria-labelledby="readinessTitle">
+          <div class="slide__content">
+            <p class="eyebrow">One quick detail</p>
+            <h2 id="readinessTitle">How soon would you like to finalise the venue?</h2>
+            <div class="choice-list" role="radiogroup" aria-label="Booking readiness">
+              <button class="choice-button" type="button" data-field="booking_timeline" data-value="Within 7 days" role="radio" aria-checked="false">Within 7 days</button>
+              <button class="choice-button" type="button" data-field="booking_timeline" data-value="Within 2-4 weeks" role="radio" aria-checked="false">Within 2–4 weeks</button>
+              <button class="choice-button" type="button" data-field="booking_timeline" data-value="Within 1-3 months" role="radio" aria-checked="false">Within 1–3 months</button>
+              <button class="choice-button" type="button" data-field="booking_timeline" data-value="Just exploring" role="radio" aria-checked="false">Just exploring</button>
+            </div>
+            <div class="actions actions--back-only">
+              <button class="back-button" type="button" data-back>Back</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-step="visit" aria-labelledby="visitTitle">
+          <div class="slide__content">
+            <p class="eyebrow">Personal assistance</p>
+            <h2 id="visitTitle">How would you like us to assist you?</h2>
+            <div class="choice-list" role="radiogroup" aria-label="Preferred next step">
+              <button class="choice-button" type="button" data-field="visit_preference" data-value="Schedule a venue visit" role="radio" aria-checked="false">Schedule a venue visit</button>
+              <button class="choice-button" type="button" data-field="visit_preference" data-value="Send package details first" role="radio" aria-checked="false">Send package details first</button>
+              <button class="choice-button" type="button" data-field="visit_preference" data-value="Call me first" role="radio" aria-checked="false">Call me first</button>
+            </div>
+            <div class="actions actions--back-only">
+              <button class="back-button" type="button" data-back>Back</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-step="name" aria-labelledby="nameTitle">
+          <div class="slide__content">
+            <p class="eyebrow">Almost there</p>
+            <h2 id="nameTitle">What should we call you?</h2>
+            <label class="field-label" for="fullName">Your name</label>
+            <input id="fullName" name="full_name" class="text-input" type="text" inputmode="text" autocomplete="name" maxlength="60" placeholder="Enter your name">
+            <p id="nameError" class="error-message" role="alert"></p>
+            <div class="actions">
+              <button class="back-button" type="button" data-back>Back</button>
+              <button class="primary-button" type="button" data-name-next>Continue</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-step="phone" aria-labelledby="phoneTitle">
+          <div class="slide__content">
+            <p class="eyebrow">Your offer code</p>
+            <h2 id="phoneTitle">Where should we send your offer?</h2>
+            <p class="question-help">Enter a number that is active on WhatsApp.</p>
+            <label class="field-label" for="phoneNumber">WhatsApp number</label>
+            <div class="phone-field">
+              <span aria-hidden="true">+91</span>
+              <input id="phoneNumber" name="phone_number" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="10" placeholder="10-digit number">
+            </div>
+            <label class="consent-row">
+              <input id="consent" type="checkbox">
+              <span>I agree to receive details about this enquiry by call or WhatsApp.</span>
+            </label>
+            <p id="phoneError" class="error-message" role="alert"></p>
+            <div class="actions">
+              <button class="back-button" type="button" data-back>Back</button>
+              <button id="submitButton" class="primary-button" type="submit">Unlock my offer code</button>
+            </div>
+            <p class="secure-note">Your details are used only for this enquiry.</p>
+          </div>
+        </section>
+
+        <section class="slide slide--success" data-step="success" aria-labelledby="successTitle">
+          <div class="slide__content success-content">
+            <span class="success-mark" aria-hidden="true">✓</span>
+            <p class="eyebrow">One final step</p>
+            <h2 id="successTitle">Send the WhatsApp message to activate your offer</h2>
+            <p>Your code becomes valid only after you send the pre-filled message on WhatsApp.</p>
+            <div class="code-card">
+              <span>Your offer code</span>
+              <strong id="offerCode">—</strong>
+            </div>
+            <div id="offerSummary" class="offer-summary"></div>
+            <button id="whatsappButton" class="whatsapp-button" type="button">
+              <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16.1 3.2A12.7 12.7 0 0 0 5.2 22.4L3.5 28.7l6.5-1.7a12.8 12.8 0 1 0 6.1-23.8Zm0 23.1c-2 0-3.9-.5-5.6-1.5l-.4-.2-3.8 1 1-3.7-.3-.4a10.4 10.4 0 1 1 9.1 4.8Zm5.7-7.8c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.7.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.6-.5-.8-.5h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.2s1.4 3.7 1.6 4c.2.3 2.7 4.1 6.5 5.7 2.4 1 3.4 1.1 4.6.9.7-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.5Z"/></svg>
+              Send WhatsApp &amp; activate code
+            </button>
+            <p id="connectionNotice" class="connection-notice" aria-live="polite"></p>
+          </div>
+        </section>
+      </div>
+    </form>
+  </main>
+
+  <dialog id="offerDialog" class="offer-dialog">
+    <div class="offer-dialog__image-wrap">
+      <img id="offerImage" src="assets/hall-crystal.jpg" alt="Celebration venue">
+      <span class="unlocked-badge">Offer unlocked</span>
+    </div>
+    <div class="offer-dialog__body">
+      <p class="eyebrow">Selected especially for you</p>
+      <h2 id="offerTitle">Your FREE offer is unlocked</h2>
+      <p id="offerPrice" class="offer-price"></p>
+      <ul id="offerItems" class="offer-list"></ul>
+      <p class="offer-activation-note">Complete the form to receive your code. The code becomes valid only after you send the WhatsApp message.</p>
+      <button id="offerContinue" class="primary-button" type="button">Continue with this offer</button>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
