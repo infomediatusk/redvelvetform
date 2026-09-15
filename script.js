@@ -16,6 +16,7 @@
   const offerItems = document.getElementById("offerItems");
   const offerContinue = document.getElementById("offerContinue");
   const scratchCard = document.getElementById("scratchCard");
+  const scratchCanvas = document.getElementById("scratchCanvas");
   const guestChoices = document.getElementById("guestChoices");
   const budgetChoices = document.getElementById("budgetChoices");
   const toast = document.getElementById("toast");
@@ -88,6 +89,10 @@
   let leadId = "";
   let offerCode = "";
   let formStarted = false;
+  let scratchContext = null;
+  let scratchScale = 1;
+  let scratchActive = false;
+  let scratchMoves = 0;
 
   init();
 
@@ -149,7 +154,16 @@
       goTo(currentIndex + 1);
     });
 
-    scratchCard.addEventListener("click", () => scratchCard.classList.add("is-revealed"));
+    scratchCard.addEventListener("pointerdown", startScratch);
+    scratchCard.addEventListener("pointermove", continueScratch);
+    scratchCard.addEventListener("pointerup", stopScratch);
+    scratchCard.addEventListener("pointercancel", stopScratch);
+    scratchCard.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        revealScratch();
+      }
+    });
 
     document.querySelector("[data-name-next]").addEventListener("click", validateNameAndContinue);
     document.getElementById("fullName").addEventListener("keydown", (event) => {
@@ -183,7 +197,7 @@
     const offer = offerData[answers.event_type];
     offerImage.src = offer.image;
     offerImage.alt = `${answers.event_type} celebration setting`;
-    offerTitle.textContent = `Your ${answers.event_type} FREE offer is unlocked`;
+    offerTitle.textContent = `${answers.event_type} Celebration Offer`;
     offerPrice.textContent = offer.price;
     offerPrice.hidden = !offer.price;
     offerItems.replaceChildren(...offer.items.map((item) => {
@@ -290,9 +304,8 @@
 
     document.getElementById("offerCode").textContent = offerCode;
     const offer = offerData[answers.event_type];
-    scratchCard.classList.remove("is-revealed");
-    document.getElementById("offerSummary").textContent = `${answers.event_type} offer · ${offer.price}`;
-    window.setTimeout(() => scratchCard.classList.add("is-revealed"), 1100);
+    resetScratchCard();
+    renderOfferSummary(offer);
 
     track("generate_lead", {
       currency: "INR",
@@ -314,6 +327,106 @@
       whatsappButton.disabled = true;
       connectionNotice.textContent = "WhatsApp activation number must be added before publishing this page.";
     }
+  }
+
+  function renderOfferSummary(offer) {
+    const summary = document.getElementById("offerSummary");
+    const title = document.createElement("strong");
+    const price = document.createElement("span");
+    const inclusions = document.createElement("span");
+
+    title.textContent = `${answers.event_type} Celebration Offer`;
+    price.textContent = offer.price;
+    inclusions.textContent = `Includes: ${offer.items.map((item) => item.replace(/^(\d+\s+)?FREE\s+/i, (_, quantity = "") => quantity ? `${quantity} ` : "")).join(" | ")}`;
+    summary.replaceChildren(title, price, inclusions);
+  }
+
+  function resetScratchCard() {
+    const bounds = scratchCard.getBoundingClientRect();
+    const width = Math.max(1, Math.floor(bounds.width));
+    const height = Math.max(1, Math.floor(bounds.height));
+    scratchScale = Math.min(window.devicePixelRatio || 1, 2);
+    scratchCanvas.width = Math.floor(width * scratchScale);
+    scratchCanvas.height = Math.floor(height * scratchScale);
+    scratchCanvas.style.width = `${width}px`;
+    scratchCanvas.style.height = `${height}px`;
+    scratchContext = scratchCanvas.getContext("2d", { willReadFrequently: true });
+    scratchContext.setTransform(scratchScale, 0, 0, scratchScale, 0, 0);
+    drawScratchFoil(width, height);
+    scratchMoves = 0;
+    scratchActive = false;
+    scratchCard.classList.remove("is-revealed");
+    scratchCard.setAttribute("aria-label", "Scratch to reveal your offer code");
+  }
+
+  function drawScratchFoil(width, height) {
+    const gradient = scratchContext.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, "#6f5033");
+    gradient.addColorStop(0.48, "#d8ba82");
+    gradient.addColorStop(1, "#80603e");
+    scratchContext.globalCompositeOperation = "source-over";
+    scratchContext.fillStyle = gradient;
+    scratchContext.fillRect(0, 0, width, height);
+    scratchContext.globalAlpha = 0.24;
+    scratchContext.strokeStyle = "#fff5d5";
+    scratchContext.lineWidth = 2;
+    for (let x = -height; x < width + height; x += 10) {
+      scratchContext.beginPath();
+      scratchContext.moveTo(x, 0);
+      scratchContext.lineTo(x + height, height);
+      scratchContext.stroke();
+    }
+    scratchContext.globalAlpha = 1;
+  }
+
+  function startScratch(event) {
+    if (scratchCard.classList.contains("is-revealed")) return;
+    scratchActive = true;
+    scratchCard.setPointerCapture(event.pointerId);
+    scratchAt(event);
+  }
+
+  function continueScratch(event) {
+    if (scratchActive) scratchAt(event);
+  }
+
+  function stopScratch(event) {
+    scratchActive = false;
+    if (scratchCard.hasPointerCapture(event.pointerId)) scratchCard.releasePointerCapture(event.pointerId);
+  }
+
+  function scratchAt(event) {
+    if (!scratchContext) return;
+    const bounds = scratchCanvas.getBoundingClientRect();
+    const x = event.clientX - bounds.left;
+    const y = event.clientY - bounds.top;
+    scratchContext.save();
+    scratchContext.globalCompositeOperation = "destination-out";
+    scratchContext.beginPath();
+    scratchContext.arc(x, y, 21, 0, Math.PI * 2);
+    scratchContext.fill();
+    scratchContext.restore();
+    scratchMoves += 1;
+    if (scratchMoves % 6 === 0 && scratchCoverage() >= 0.38) revealScratch();
+  }
+
+  function scratchCoverage() {
+    const pixels = scratchContext.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height).data;
+    const sampleStep = Math.max(1, Math.round(7 * scratchScale));
+    let transparent = 0;
+    let samples = 0;
+    for (let y = 0; y < scratchCanvas.height; y += sampleStep) {
+      for (let x = 0; x < scratchCanvas.width; x += sampleStep) {
+        samples += 1;
+        if (pixels[(y * scratchCanvas.width + x) * 4 + 3] < 80) transparent += 1;
+      }
+    }
+    return samples ? transparent / samples : 0;
+  }
+
+  function revealScratch() {
+    scratchCard.classList.add("is-revealed");
+    scratchCard.setAttribute("aria-label", `Offer code revealed: ${offerCode}`);
   }
 
   async function openWhatsApp() {
@@ -343,7 +456,7 @@
     window.location.href = url;
     window.setTimeout(() => {
       whatsappButton.disabled = false;
-      whatsappButton.innerHTML = `${whatsappIcon()}Send WhatsApp &amp; activate code`;
+      whatsappButton.innerHTML = `${whatsappIcon()}Send Offer Details On WhatsApp`;
     }, 1500);
   }
 

@@ -10,7 +10,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/venue-overview.jpg" fetchpriority="high">
   <link rel="stylesheet" href="styles.css">
 
@@ -202,21 +202,21 @@
         <section class="slide slide--success" data-step="success" aria-labelledby="successTitle">
           <div class="slide__content success-content">
             <span class="success-mark" aria-hidden="true">✓</span>
-            <p class="eyebrow">Your offer is ready</p>
-            <h2 id="successTitle">Your private code is ready</h2>
-            <p class="success-lead">Send your details on WhatsApp to activate your offer.</p>
+            <p class="eyebrow">Your Offer Is Ready</p>
+            <h2 id="successTitle">Your Private Code Is Ready</h2>
+            <p class="success-lead">Send Your Details On WhatsApp To Activate Your Offer.</p>
             <div class="code-card">
-              <span class="code-card__label">Tap to reveal your offer code</span>
-              <button id="scratchCard" class="scratch-card" type="button" aria-label="Reveal your offer code">
+              <span class="code-card__label">Scratch To Reveal Your Offer Code</span>
+              <button id="scratchCard" class="scratch-card" type="button" aria-label="Scratch to reveal your offer code">
                 <strong id="offerCode">—</strong>
-                <span class="scratch-card__foil" aria-hidden="true"></span>
-                <span class="scratch-card__hint">Scratch to reveal</span>
+                <canvas id="scratchCanvas" class="scratch-canvas" aria-hidden="true"></canvas>
+                <span class="scratch-card__hint">Scratch Here</span>
               </button>
             </div>
             <div id="offerSummary" class="offer-summary"></div>
             <button id="whatsappButton" class="whatsapp-button" type="button">
               <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16.1 3.2A12.7 12.7 0 0 0 5.2 22.4L3.5 28.7l6.5-1.7a12.8 12.8 0 1 0 6.1-23.8Zm0 23.1c-2 0-3.9-.5-5.6-1.5l-.4-.2-3.8 1 1-3.7-.3-.4a10.4 10.4 0 1 1 9.1 4.8Zm5.7-7.8c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.7.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.6-.5-.8-.5h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.2s1.4 3.7 1.6 4c.2.3 2.7 4.1 6.5 5.7 2.4 1 3.4 1.1 4.6.9.7-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.5Z"/></svg>
-              Send WhatsApp &amp; activate code
+              Send Offer Details On WhatsApp
             </button>
             <p id="connectionNotice" class="connection-notice" aria-live="polite"></p>
           </div>
@@ -228,16 +228,14 @@
   <dialog id="offerDialog" class="offer-dialog">
     <div class="offer-dialog__image-wrap">
       <img id="offerImage" src="assets/hall-crystal.jpg" alt="Celebration venue">
-      <span class="unlocked-badge">Offer unlocked</span>
+      <span class="unlocked-badge">Offer Unlocked</span>
     </div>
     <div class="offer-dialog__body">
-      <p class="eyebrow">Selected especially for you</p>
-      <h2 id="offerTitle">Your FREE offer is unlocked</h2>
+      <h2 id="offerTitle">Your Celebration Offer</h2>
       <p id="offerPrice" class="offer-price"></p>
-      <p class="offer-inclusions-label">Your FREE inclusions</p>
+      <p class="offer-inclusions-label">Included In Your Offer</p>
       <ul id="offerItems" class="offer-list"></ul>
-      <p class="offer-activation-note">Complete the form to receive your code. The code becomes valid only after you send the WhatsApp message.</p>
-      <button id="offerContinue" class="primary-button" type="button">Continue with this offer</button>
+      <button id="offerContinue" class="primary-button" type="button">Continue With This Offer</button>
     </div>
   </dialog>
 

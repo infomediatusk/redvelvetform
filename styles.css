@@ -215,6 +215,9 @@ button {
 }
 
 .slide--intro h1 {
+  font-family: "Bodoni Moda", "Cormorant Garamond", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.045em;
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.28);
 }
 
@@ -637,6 +640,7 @@ h2:focus {
   border: 1px solid rgba(154, 116, 59, 0.42);
   border-radius: 10px;
   cursor: pointer;
+  touch-action: none;
   background: linear-gradient(135deg, #f7e7bb, #c69c58);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.46);
 }
@@ -650,23 +654,15 @@ h2:focus {
   letter-spacing: 0.08em;
 }
 
-.scratch-card__foil {
+.scratch-canvas {
   position: absolute;
   z-index: 2;
   inset: 0;
-  background:
-    repeating-linear-gradient(118deg, rgba(255, 255, 255, 0.32) 0 2px, transparent 2px 8px),
-    linear-gradient(135deg, #7d5b39, #d4b57d 48%, #80603e);
-  transition: opacity 500ms ease, transform 550ms cubic-bezier(.22, .8, .28, 1);
-}
-
-.scratch-card__foil::after {
-  content: "";
-  position: absolute;
-  inset: -20% 35%;
-  background: rgba(255, 248, 222, 0.38);
-  transform: rotate(18deg);
-  animation: scratch-glint 2.4s ease-in-out infinite;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+  transition: opacity 450ms ease;
 }
 
 .scratch-card__hint {
@@ -676,13 +672,13 @@ h2:focus {
   font-size: 0.65rem;
   font-weight: 800;
   letter-spacing: 0.12em;
+  pointer-events: none;
   text-transform: uppercase;
   transition: opacity 250ms ease, transform 250ms ease;
 }
 
-.scratch-card.is-revealed .scratch-card__foil {
+.scratch-card.is-revealed .scratch-canvas {
   opacity: 0;
-  transform: translateY(-100%);
   pointer-events: none;
 }
 
@@ -691,17 +687,27 @@ h2:focus {
   transform: translateY(-5px);
 }
 
-@keyframes scratch-glint {
-  0%, 35% { transform: translateX(-80px) rotate(18deg); }
-  65%, 100% { transform: translateX(130px) rotate(18deg); }
+.offer-summary {
+  display: grid;
+  gap: 3px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(201, 168, 106, 0.34);
+  border-radius: 11px;
+  color: var(--wine);
+  background: #fffaf1;
+  font-size: 0.78rem;
+  line-height: 1.5;
 }
 
-.offer-summary {
-  margin-bottom: 12px;
-  color: var(--wine);
-  font-size: 0.78rem;
-  font-weight: 700;
-  line-height: 1.5;
+.offer-summary strong {
+  font-size: 0.84rem;
+}
+
+.offer-summary span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 650;
 }
 
 .whatsapp-button {
@@ -850,16 +856,6 @@ h2:focus {
   min-width: 0;
 }
 
-.offer-activation-note {
-  margin: 0 0 18px;
-  padding: 12px;
-  border-left: 3px solid var(--gold);
-  color: var(--muted);
-  background: rgba(201, 168, 106, 0.1);
-  font-size: 0.75rem;
-  line-height: 1.55;
-}
-
 .offer-dialog .primary-button {
   width: 100%;
 }
@@ -954,12 +950,6 @@ h2:focus {
 
   .offer-dialog h2 {
     font-size: 2.2rem;
-  }
-
-  .offer-activation-note {
-    margin-bottom: 13px;
-    padding: 9px;
-    font-size: 0.7rem;
   }
 
 }
