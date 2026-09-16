@@ -14,12 +14,19 @@
   <link rel="preload" as="image" href="assets/venue-overview.jpg" fetchpriority="high">
   <link rel="stylesheet" href="styles.css">
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-487QVEW30G"></script>
+  <script src="config.js"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-487QVEW30G', { send_page_view: true });
+    window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+    const gaMeasurementId = (window.LANDING_CONFIG && window.LANDING_CONFIG.gaMeasurementId) || "G-487QVEW30G";
+    if (gaMeasurementId) {
+      const gaScript = document.createElement("script");
+      gaScript.async = true;
+      gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaMeasurementId)}`;
+      document.head.appendChild(gaScript);
+      window.gtag("js", new Date());
+      window.gtag("config", gaMeasurementId, { send_page_view: true });
+    }
   </script>
 
   <script>
@@ -28,8 +35,11 @@
     n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
     t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
     (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '925632936518912');
-    fbq('track', 'PageView');
+    const metaPixelId = (window.LANDING_CONFIG && window.LANDING_CONFIG.metaPixelId) || "925632936518912";
+    if (metaPixelId) {
+      window.fbq('init', metaPixelId);
+      window.fbq('track', 'PageView');
+    }
   </script>
 </head>
 <body>
@@ -204,13 +214,13 @@
             <span class="success-mark" aria-hidden="true">✓</span>
             <p class="eyebrow">Your Offer Is Ready</p>
             <h2 id="successTitle">Your Private Code Is Ready</h2>
-            <p class="success-lead">Send Your Details On WhatsApp To Activate Your Offer.</p>
+            <p class="success-lead">Send your details on WhatsApp to activate your offer.</p>
             <div class="code-card">
-              <span class="code-card__label">Scratch To Reveal Your Offer Code</span>
+              <span id="codeCardLabel" class="code-card__label" aria-live="polite">Reveal Your Private Offer Code</span>
               <button id="scratchCard" class="scratch-card" type="button" aria-label="Scratch to reveal your offer code">
                 <strong id="offerCode">—</strong>
                 <canvas id="scratchCanvas" class="scratch-canvas" aria-hidden="true"></canvas>
-                <span class="scratch-card__hint">Scratch Here</span>
+                <span class="scratch-card__hint">Scratch To Reveal</span>
               </button>
             </div>
             <div id="offerSummary" class="offer-summary"></div>
@@ -233,15 +243,14 @@
     <div class="offer-dialog__body">
       <h2 id="offerTitle">Your Celebration Offer</h2>
       <p id="offerPrice" class="offer-price"></p>
-      <p class="offer-inclusions-label">Included In Your Offer</p>
+      <p class="offer-inclusions-label">What’s included</p>
       <ul id="offerItems" class="offer-list"></ul>
-      <button id="offerContinue" class="primary-button" type="button">Continue With This Offer</button>
+      <button id="offerContinue" class="primary-button" type="button">Continue with this offer</button>
     </div>
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

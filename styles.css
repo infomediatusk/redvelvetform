@@ -614,20 +614,33 @@ h2:focus {
 
 .code-card {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   margin: 12px 0;
-  padding: 12px;
-  border: 1px solid var(--gold);
-  border-radius: 14px;
-  background: #fffaf1;
 }
 
 .code-card__label {
-  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--wine);
   font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.code-card__label::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 168, 106, 0.14);
+}
+
+.code-card.is-revealed .code-card__label::before {
+  background: #4d8768;
+  box-shadow: 0 0 0 3px rgba(77, 135, 104, 0.14);
 }
 
 .scratch-card {
@@ -637,12 +650,13 @@ h2:focus {
   width: 100%;
   min-height: 68px;
   overflow: hidden;
-  border: 1px solid rgba(154, 116, 59, 0.42);
+  border: 1px solid rgba(74, 13, 25, 0.44);
   border-radius: 10px;
   cursor: pointer;
   touch-action: none;
-  background: linear-gradient(135deg, #f7e7bb, #c69c58);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.46);
+  background: linear-gradient(135deg, #f8e8bc, #c69c58);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.46), 0 4px 10px rgba(74, 13, 25, 0.08);
+  transition: background 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
 }
 
 .scratch-card strong {
@@ -680,6 +694,12 @@ h2:focus {
 .scratch-card.is-revealed .scratch-canvas {
   opacity: 0;
   pointer-events: none;
+}
+
+.scratch-card.is-revealed {
+  border-color: rgba(201, 168, 106, 0.78);
+  background: linear-gradient(135deg, #fffdf8 0%, #f3e5ce 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.88), 0 5px 14px rgba(74, 13, 25, 0.08);
 }
 
 .scratch-card.is-revealed .scratch-card__hint {
@@ -738,7 +758,7 @@ h2:focus {
   border: 1px solid var(--gold);
   border-radius: 22px;
   color: var(--charcoal);
-  background: var(--ivory);
+  background: linear-gradient(180deg, #fffdf9 0%, #f7efe3 100%);
   box-shadow: 0 32px 90px rgba(12, 1, 4, 0.52);
 }
 
@@ -802,58 +822,80 @@ h2:focus {
   color: var(--wine);
   font-size: 0.7rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .offer-list {
   display: grid;
-  gap: 9px;
+  gap: 8px;
   margin: 0 0 16px;
   padding: 0;
   list-style: none;
 }
 
 .offer-list li {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 9px;
-  min-height: 44px;
-  padding: 9px 11px;
-  border: 1px solid rgba(201, 168, 106, 0.34);
-  border-radius: 11px;
+  gap: 11px;
+  min-height: 62px;
+  padding: 10px 12px;
+  border: 1px solid rgba(201, 168, 106, 0.26);
+  border-radius: 13px;
   color: #4c4042;
-  font-size: 0.86rem;
-  font-weight: 700;
-  line-height: 1.45;
-  background: linear-gradient(100deg, #fffaf1, #f8ecd2);
+  background: rgba(255, 253, 248, 0.86);
+  box-shadow: 0 4px 12px rgba(74, 13, 25, 0.045), inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 
-.offer-list li::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: #9a743b;
-  font-weight: 900;
+.offer-item-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: var(--wine);
 }
 
-.offer-list li::before {
-  content: none;
-}
-
-.offer-free-badge {
-  flex: 0 0 auto;
-  padding: 5px 6px;
-  border-radius: 6px;
-  color: #fff8e8;
-  background: var(--wine);
-  font-size: 0.58rem;
-  font-weight: 900;
-  letter-spacing: 0.07em;
+.offer-item-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.65;
 }
 
 .offer-item-copy {
+  display: grid;
+  gap: 3px;
   min-width: 0;
+}
+
+.offer-item-copy strong {
+  color: #312326;
+  font-size: 0.83rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.offer-item-copy span {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.offer-included-badge {
+  flex: 0 0 auto;
+  padding: 5px 7px;
+  border: 1px solid rgba(74, 13, 25, 0.12);
+  border-radius: 99px;
+  color: var(--wine);
+  background: #fbf4e6;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .offer-dialog .primary-button {

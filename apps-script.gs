@@ -4,6 +4,13 @@
  *   Execute as: Me
  *   Who has access: Anyone
  * Paste the deployed URL into config.js -> googleScriptUrl.
+ *
+ * Optional Meta Conversions API setup in Apps Script > Project Settings >
+ * Script properties:
+ *   META_PIXEL_ID       925632936518912
+ *   META_ACCESS_TOKEN   paste the token from Events Manager
+ *   META_API_VERSION    current supported Graph API version, e.g. vXX.X
+ *   META_TEST_EVENT_CODE optional; remove after testing
  */
 
 const SHEET_NAME = 'Leads';
@@ -61,7 +68,17 @@ function doPost(e) {
       sheet.appendRow(toRow_(data));
     }
 
-    return json_({ ok: true, lead_id: data.lead_id });
+    // Keep the Sheet write independent from Meta delivery. If Meta is
+    // temporarily unavailable, the lead is still safely stored here.
+    let metaStatus = 'skipped';
+    try {
+      metaStatus = sendMetaConversion_(data);
+    } catch (metaError) {
+      console.error('Meta CAPI delivery failed: ' + String(metaError.message || metaError));
+      metaStatus = 'failed';
+    }
+
+    return json_({ ok: true, lead_id: data.lead_id, meta_capi: metaStatus });
   } catch (error) {
     return json_({ ok: false, error: String(error.message || error) });
   } finally {
@@ -102,6 +119,97 @@ function findLeadRow_(sheet, leadId) {
     .matchEntireCell(true)
     .findNext();
   return match ? match.getRow() : -1;
+}
+
+function sendMetaConversion_(data) {
+  const properties = PropertiesService.getScriptProperties().getProperties();
+  const accessToken = String(properties.META_ACCESS_TOKEN || '').trim();
+  if (!accessToken) return 'not_configured';
+
+  const pixelId = String(properties.META_PIXEL_ID || '925632936518912').trim();
+  const apiVersion = String(properties.META_API_VERSION || '').trim();
+  if (!apiVersion) throw new Error('Missing META_API_VERSION in Script Properties');
+
+  const isWhatsAppClick = data.action === 'whatsapp_click';
+  const eventName = isWhatsAppClick ? 'Contact' : 'Lead';
+  const eventId = isWhatsAppClick ? `${data.lead_id}-WA` : String(data.lead_id);
+  const userData = compactObject_({
+    ph: data.phone ? [sha256_(normalisePhone_(data.phone))] : undefined,
+    fbp: data.fbp || undefined,
+    fbc: data.fbc || undefined,
+    client_user_agent: data.user_agent || undefined
+  });
+
+  const serverEvent = {
+    event_name: eventName,
+    event_time: eventTime_(data.submitted_at),
+    event_id: eventId,
+    action_source: 'website',
+    event_source_url: data.page_url || 'https://redvelvetform.mediatusk.com/',
+    user_data: userData,
+    custom_data: compactObject_({
+      content_name: isWhatsAppClick
+        ? `${data.event_type || 'Celebration'} WhatsApp activation`
+        : `${data.event_type || 'Celebration'} enquiry`,
+      content_category: 'Celebration enquiry',
+      event_type: data.event_type || undefined,
+      offer_code: data.offer_code || undefined
+    })
+  };
+
+  const requestBody = {
+    data: [serverEvent],
+    partner_agent: 'red_velvet_google_apps_script'
+  };
+  const testEventCode = String(properties.META_TEST_EVENT_CODE || '').trim();
+  if (testEventCode) requestBody.test_event_code = testEventCode;
+
+  const endpoint = `https://graph.facebook.com/${apiVersion}/${encodeURIComponent(pixelId)}/events?access_token=${encodeURIComponent(accessToken)}`;
+  const response = UrlFetchApp.fetch(endpoint, {
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify(requestBody),
+    muteHttpExceptions: true
+  });
+  const responseCode = response.getResponseCode();
+  const responseText = response.getContentText();
+  if (responseCode < 200 || responseCode >= 300) {
+    throw new Error(`Meta API ${responseCode}: ${responseText.slice(0, 300)}`);
+  }
+
+  console.log(`Meta CAPI ${eventName} sent: ${responseText.slice(0, 300)}`);
+  return 'sent';
+}
+
+function eventTime_(submittedAt) {
+  const parsed = Date.parse(String(submittedAt || ''));
+  return Math.floor((Number.isNaN(parsed) ? Date.now() : parsed) / 1000);
+}
+
+function normalisePhone_(value) {
+  return String(value || '').replace(/\D/g, '');
+}
+
+function sha256_(value) {
+  const bytes = Utilities.computeDigest(
+    Utilities.DigestAlgorithm.SHA_256,
+    String(value),
+    Utilities.Charset.UTF_8
+  );
+  return bytes.map(function (byte) {
+    const unsigned = byte < 0 ? byte + 256 : byte;
+    return ('0' + unsigned.toString(16)).slice(-2);
+  }).join('');
+}
+
+function compactObject_(object) {
+  return Object.keys(object).reduce(function (result, key) {
+    const value = object[key];
+    if (value !== undefined && value !== null && value !== '' && (!Array.isArray(value) || value.length)) {
+      result[key] = value;
+    }
+    return result;
+  }, {});
 }
 
 function toRow_(data) {

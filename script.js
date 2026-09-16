@@ -17,6 +17,8 @@
   const offerContinue = document.getElementById("offerContinue");
   const scratchCard = document.getElementById("scratchCard");
   const scratchCanvas = document.getElementById("scratchCanvas");
+  const codeCard = document.querySelector(".code-card");
+  const codeCardLabel = document.getElementById("codeCardLabel");
   const guestChoices = document.getElementById("guestChoices");
   const budgetChoices = document.getElementById("budgetChoices");
   const toast = document.getElementById("toast");
@@ -40,26 +42,54 @@
       prefix: "BD",
       image: "assets/hall-crystal.jpg",
       price: "₹22,999 for 20–25 guests",
-      items: ["FREE balloon decoration", "FREE birthday cake", "FREE music"]
+      items: [
+        { icon: "balloon", label: "Balloon styling included" },
+        { icon: "cake", label: "Celebration cake included" },
+        { icon: "music", label: "Birthday music arrangement" }
+      ]
     },
     Anniversary: {
       prefix: "AN",
       image: "assets/private-dining.jpg",
-      price: "INR 22,999 for 20-25 guests",
-      items: ["FREE balloon decoration", "FREE birthday cake", "FREE music"]
+      price: "₹22,999 for 20–25 guests",
+      items: [
+        { icon: "balloon", label: "Romantic balloon styling" },
+        { icon: "cake", label: "Anniversary cake included" },
+        { icon: "music", label: "Romantic celebration music" }
+      ]
     },
     Engagement: {
       prefix: "EN",
       image: "assets/hall-lounge-seating.jpg",
       price: "₹1,49,999 onwards · 25–100 guests",
-      items: ["FREE flower decoration", "FREE chef-crafted menu", "FREE couple master room"]
+      items: [
+        { icon: "flower", label: "Floral styling included" },
+        { icon: "menu", label: "Chef-curated celebration menu" },
+        { icon: "suite", label: "Couple’s suite stay" }
+      ]
     },
     Wedding: {
       prefix: "WD",
       image: "assets/venue-overview.jpg",
       price: "₹3,49,999 onwards · 100–550 guests",
-      items: ["2 FREE couple master rooms", "FREE chef-crafted menu", "FREE DJ console", "FREE theme decoration"]
+      items: [
+        { icon: "suite", label: "2 couple’s suite stays" },
+        { icon: "menu", label: "Chef-curated celebration menu" },
+        { icon: "dj", label: "DJ console setup" },
+        { icon: "decor", label: "Signature theme décor" }
+      ]
     }
+  };
+
+  const offerIcons = {
+    balloon: '<path d="M12 3.2c-3.05 0-5.2 2.54-5.2 5.93 0 3.67 2.4 6.3 5.2 6.3s5.2-2.63 5.2-6.3c0-3.39-2.15-5.93-5.2-5.93Z"/><path d="m9.8 15.15 2.2 1.9 2.2-1.9M12 17.05v3.95M12 21l-1.6-1.1M12 21l1.6-1.1"/>',
+    cake: '<path d="M4 11h16v7.25A1.75 1.75 0 0 1 18.25 20H5.75A1.75 1.75 0 0 1 4 18.25V11Z"/><path d="M3 11h18M8 7v4M12 7v4M16 7v4M8 7c0-1 .7-1.6 1.4-2.15M12 7c0-1 .7-1.6 1.4-2.15M16 7c0-1 .7-1.6 1.4-2.15M4 15c1.1 0 1.1.9 2.2.9s1.1-.9 2.2-.9 1.1.9 2.2.9 1.1-.9 2.2-.9 1.1.9 2.2.9 1.1-.9 2.2-.9 1.1.9 2.2.9 1.1-.9 2.2-.9 1.1.9 2.2.9"/>',
+    music: '<path d="M9 18.25a2.75 2.75 0 1 1-2-2.65V6.5l10-2v10.75a2.75 2.75 0 1 1-2-2.65V7.1L9 8.3v9.95Z"/>',
+    flower: '<path d="M12 10.6c-2.2-1.8-2.4-4.75-.55-5.45 1.35-.5 2.2.7 2.55 1.55.35-.85 1.2-2.05 2.55-1.55 1.85.7 1.65 3.65-.55 5.45 2.8-.6 4.8.8 4.25 2.65-.4 1.35-1.8 1.5-2.7 1.35.4.85.65 2.3-.7 2.8-1.85.7-3.55-1.7-2.85-4.35-.7 2.65-3.2 3.65-4.3 2.05-.8-1.15.05-2.3.75-2.85-.9-.15-2.3-.7-2-2.1.4-1.85 2.7-2.15 3.55-.55Z"/><path d="M12 14v7M12 18c-1.2-1.3-2.25-1.5-3.2-1.35M12 17c1.2-1.3 2.25-1.5 3.2-1.35"/>',
+    menu: '<path d="M4 14h16M5 14a7 7 0 0 1 14 0M7 17.5h10M8.5 20h7"/><path d="M12 7V4M10.5 4h3"/>',
+    suite: '<path d="M3.5 17.5h17M5 17.5v-6h14v6M5 14h14M7 11.5V9.75A1.75 1.75 0 0 1 8.75 8h2.5A1.75 1.75 0 0 1 13 9.75v1.75M3.5 20v-2.5M20.5 20v-2.5"/>',
+    dj: '<path d="M4 7h16M6 7v3M18 7v3M5 10h14l-1 9H6l-1-9ZM9 14h6M10 17h4"/>',
+    decor: '<path d="m12 3 1.1 4.9L18 9l-4.9 1.1L12 15l-1.1-4.9L6 9l4.9-1.1L12 3ZM19 15l.55 2.45L22 18l-2.45.55L19 21l-.55-2.45L16 18l2.45-.55L19 15Z"/>'
   };
 
   const guestData = {
@@ -202,13 +232,21 @@
     offerPrice.hidden = !offer.price;
     offerItems.replaceChildren(...offer.items.map((item) => {
       const li = document.createElement("li");
-      const badge = document.createElement("span");
-      badge.className = "offer-free-badge";
-      badge.textContent = "FREE";
+      const icon = document.createElement("span");
+      icon.className = "offer-item-icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.innerHTML = `<svg viewBox="0 0 24 24" focusable="false">${offerIcons[item.icon]}</svg>`;
       const copy = document.createElement("span");
       copy.className = "offer-item-copy";
-      copy.textContent = item.replace(/^(\d+\s+)?FREE\s+/i, (_, quantity = "") => quantity ? `${quantity} ` : "");
-      li.append(badge, copy);
+      const label = document.createElement("strong");
+      label.textContent = item.label;
+      const meta = document.createElement("span");
+      meta.textContent = "Included at no extra cost";
+      copy.append(label, meta);
+      const included = document.createElement("span");
+      included.className = "offer-included-badge";
+      included.textContent = "Included";
+      li.append(icon, copy, included);
       return li;
     }));
     track("event_selected", { event_type: answers.event_type }, "EventSelected");
@@ -337,7 +375,7 @@
 
     title.textContent = `${answers.event_type} Celebration Offer`;
     price.textContent = offer.price;
-    inclusions.textContent = `Includes: ${offer.items.map((item) => item.replace(/^(\d+\s+)?FREE\s+/i, (_, quantity = "") => quantity ? `${quantity} ` : "")).join(" | ")}`;
+    inclusions.textContent = `Includes: ${offer.items.map((item) => item.label).join(" | ")}`;
     summary.replaceChildren(title, price, inclusions);
   }
 
@@ -356,6 +394,8 @@
     scratchMoves = 0;
     scratchActive = false;
     scratchCard.classList.remove("is-revealed");
+    codeCard.classList.remove("is-revealed");
+    codeCardLabel.textContent = "Reveal Your Private Offer Code";
     scratchCard.setAttribute("aria-label", "Scratch to reveal your offer code");
   }
 
@@ -425,7 +465,10 @@
   }
 
   function revealScratch() {
+    if (scratchCard.classList.contains("is-revealed")) return;
     scratchCard.classList.add("is-revealed");
+    codeCard.classList.add("is-revealed");
+    codeCardLabel.textContent = "Your Private Offer Code";
     scratchCard.setAttribute("aria-label", `Offer code revealed: ${offerCode}`);
   }
 
@@ -643,11 +686,18 @@
   }
 
   function track(gaEvent, params, metaEvent) {
+    const eventParams = {
+      ...(params || {}),
+      page_location: window.location.href
+    };
     if (typeof window.gtag === "function") {
-      window.gtag("event", gaEvent, params || {});
+      window.gtag("event", gaEvent, eventParams);
+    } else {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push(["event", gaEvent, eventParams]);
     }
     if (metaEvent && typeof window.fbq === "function") {
-      window.fbq("trackCustom", metaEvent, params || {});
+      window.fbq("trackCustom", metaEvent, eventParams);
     }
   }
 
