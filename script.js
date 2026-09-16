@@ -118,6 +118,7 @@
   let carouselIndex = 0;
   let leadId = "";
   let offerCode = "";
+  let pendingLeadPayload = null;
   let formStarted = false;
   let scratchContext = null;
   let scratchScale = 1;
@@ -331,14 +332,24 @@
       return;
     }
 
-    answers.phone_number = `+91${phone}`;
-    leadId = createLeadId();
-    offerCode = createOfferCode(phone);
+    if (!pendingLeadPayload) {
+      answers.phone_number = `+91${phone}`;
+      leadId = createLeadId();
+      offerCode = createOfferCode(phone);
+      pendingLeadPayload = buildPayload("form_submit");
+    }
     submitButton.disabled = true;
-    submitButton.textContent = "Securing your offer…";
+    submitButton.textContent = "Saving your enquiry…";
 
-    const payload = buildPayload("form_submit");
-    await sendToSheet(payload);
+    try {
+      await sendToSheet(pendingLeadPayload);
+    } catch (deliveryError) {
+      error.textContent = "We could not securely save your enquiry. Please check your connection and try again.";
+      submitButton.disabled = false;
+      submitButton.textContent = "Try again";
+      return;
+    }
+    pendingLeadPayload = null;
 
     document.getElementById("offerCode").textContent = offerCode;
     const offer = offerData[answers.event_type];
@@ -548,7 +559,7 @@
   async function sendToSheet(payload) {
     if (!config.googleScriptUrl) {
       storeLocally(payload);
-      return;
+      throw new Error("Google Sheet endpoint is not configured.");
     }
     try {
       await fetch(config.googleScriptUrl, {
@@ -557,10 +568,52 @@
         headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
         body: new URLSearchParams({ payload: JSON.stringify(payload) })
       });
+      const wasSaved = await waitForLeadConfirmation(payload.lead_id);
+      if (!wasSaved) throw new Error("Lead save confirmation timed out.");
     } catch (error) {
       storeLocally(payload);
       console.error("Lead delivery failed; a local backup was saved.", error);
+      throw error;
     }
+  }
+
+  async function waitForLeadConfirmation(savedLeadId) {
+    const delays = [350, 650, 900, 1200, 1500, 1800, 2200, 2500];
+    for (const delay of delays) {
+      await pause(delay);
+      const status = await requestLeadStatus(savedLeadId);
+      if (status && status.ok && status.saved && status.lead_id === savedLeadId) return true;
+    }
+    return false;
+  }
+
+  function requestLeadStatus(savedLeadId) {
+    return new Promise((resolve) => {
+      const callbackName = `leadStatus_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const script = document.createElement("script");
+      const separator = config.googleScriptUrl.includes("?") ? "&" : "?";
+      let settled = false;
+
+      const finish = (value) => {
+        if (settled) return;
+        settled = true;
+        window[callbackName] = undefined;
+        delete window[callbackName];
+        script.remove();
+        resolve(value);
+      };
+
+      window[callbackName] = (value) => finish(value);
+      script.async = true;
+      script.onerror = () => finish(null);
+      script.src = `${config.googleScriptUrl}${separator}action=lead_status&lead_id=${encodeURIComponent(savedLeadId)}&callback=${callbackName}`;
+      document.head.appendChild(script);
+      window.setTimeout(() => finish(null), 5000);
+    });
+  }
+
+  function pause(milliseconds) {
+    return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
   }
 
   function storeLocally(payload) {

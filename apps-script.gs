@@ -86,6 +86,32 @@ function doPost(e) {
   }
 }
 
+// The landing page posts leads with a cross-origin request. It then checks this
+// endpoint using JSONP, which lets it verify that this exact lead ID exists in
+// the Sheet before revealing the offer. No customer details are returned here.
+function doGet(e) {
+  const parameters = (e && e.parameter) || {};
+  const callback = sanitiseCallback_(parameters.callback);
+  const action = String(parameters.action || '');
+
+  if (action !== 'lead_status') {
+    return jsonOrJsonp_({ ok: false, error: 'Unknown action' }, callback);
+  }
+
+  const leadId = String(parameters.lead_id || '').trim();
+  if (!leadId || leadId.length > 100) {
+    return jsonOrJsonp_({ ok: false, error: 'Invalid lead ID' }, callback);
+  }
+
+  try {
+    const sheet = getLeadSheet_();
+    const saved = findLeadRow_(sheet, leadId) > 0;
+    return jsonOrJsonp_({ ok: true, lead_id: leadId, saved: saved }, callback);
+  } catch (error) {
+    return jsonOrJsonp_({ ok: false, error: 'Status check failed' }, callback);
+  }
+}
+
 function parsePayload_(e) {
   if (e && e.parameter && e.parameter.payload) {
     return JSON.parse(e.parameter.payload);
@@ -251,4 +277,16 @@ function json_(value) {
   return ContentService
     .createTextOutput(JSON.stringify(value))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+function jsonOrJsonp_(value, callback) {
+  if (!callback) return json_(value);
+  return ContentService
+    .createTextOutput(`${callback}(${JSON.stringify(value)});`)
+    .setMimeType(ContentService.MimeType.JAVASCRIPT);
+}
+
+function sanitiseCallback_(value) {
+  const callback = String(value || '');
+  return /^[A-Za-z_$][0-9A-Za-z_$]{0,80}$/.test(callback) ? callback : '';
 }
